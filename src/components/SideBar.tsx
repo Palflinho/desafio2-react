@@ -1,28 +1,28 @@
-  import { Button } from './Button';
-  import { MovieCard } from './MovieCard';
-  import { api } from '../services/api';
-  
-  interface GenreResponseProps {
-    id: number;
-    name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
-    title: string;
-  }
-  
-  interface MovieProps {
-    imdbID: string;
-    Title: string;
-    Poster: string;
-    Ratings: Array<{
-      Source: string;
-      Value: string;
-    }>;
-    Runtime: string;
-  }
+import { useEffect, useState } from 'react';
+import { Button } from './Button';
+import { api } from '../services/api';
 
-export function SideBar() {
-  // Complete aqui
+ interface GenreResponseProps {
+  id: number;
+  name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
+  title: string;
+}
+
+interface SideBarProps {
+  handleClickButton: (id: number) => void;
+  selectedGenreId: number;
+}
+
+export function SideBar({handleClickButton, selectedGenreId}: SideBarProps) {
+  const [genres, setGenres] = useState<GenreResponseProps[]>([]);
+
+  useEffect(() => {
+    api.get<GenreResponseProps[]>('genres').then(response => {
+      setGenres(response.data);
+    });
+  }, []);
+
   return(
-
     <nav className="sidebar">
         <span>Watch<p>Me</p></span>
 
@@ -38,7 +38,6 @@ export function SideBar() {
           ))}
         </div>
 
-      </nav>
-
+    </nav>
   )
 }
